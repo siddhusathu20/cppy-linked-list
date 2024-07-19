@@ -16,10 +16,10 @@ template <typename T> class LinkedList {
         struct Node {
             T data;
             int pos;
-            std::shared_ptr<Node> next;
+            Node* next;
         };
-        std::shared_ptr<Node> start = nullptr;
-        std::shared_ptr<Node> end = nullptr;
+        Node* start = nullptr;
+        Node* end = nullptr;
         int size = 0;
     public:
         void append(T ele);
@@ -30,6 +30,15 @@ template <typename T> class LinkedList {
         T pop();
         T del(int pos);
         int len();
+        ~LinkedList() {
+            Node* currentEle =new Node;
+            currentEle = start;
+            while (currentEle != nullptr) {
+                Node* delObj = currentEle;
+                currentEle = currentEle->next;
+                delete delObj;
+            }
+        }
 };
 
 template <typename T> int LinkedList<T>::len() {
@@ -38,14 +47,14 @@ template <typename T> int LinkedList<T>::len() {
 
 template <typename T> void LinkedList<T>::append(T ele) {
     if (start != nullptr) {
-        std::shared_ptr<Node> newNode(new Node);
+        Node* newNode = new Node;
         newNode->data = ele;
         newNode->pos = end->pos + 1;
         newNode->next = nullptr;
         end->next = newNode;
         end = newNode;
     } else {
-        std::shared_ptr<Node> newNode(new Node);
+        Node* newNode = new Node;
         newNode->data = ele;
         newNode->pos = 0;
         newNode->next = nullptr;
@@ -55,11 +64,11 @@ template <typename T> void LinkedList<T>::append(T ele) {
 }
 
 template <typename T> void LinkedList<T>::insert(T ele, int pos) {
-    std::shared_ptr<Node> currentEle(new Node);
+    Node* currentEle = new Node;
     currentEle = start;
     while (currentEle != nullptr) {
         if (currentEle->pos == pos) {
-            std::shared_ptr<Node> newNode(new Node);
+            Node* newNode = new Node;
             newNode->data = ele;
             newNode->pos = pos + 1;
             newNode->next = currentEle->next;
@@ -74,7 +83,7 @@ template <typename T> void LinkedList<T>::insert(T ele, int pos) {
 }
 
 template <typename T> std::string LinkedList<T>::str() {
-    std::shared_ptr<Node> currentEle(new Node);
+    Node* currentEle = new Node;
     std::ostringstream output;
     currentEle = start;
     if (currentEle != nullptr) {
@@ -91,7 +100,7 @@ template <typename T> std::string LinkedList<T>::str() {
 }
 
 template <typename T> T LinkedList<T>::get(int pos) {
-    std::shared_ptr<Node> currentEle(new Node);
+    Node* currentEle = new Node;
     currentEle = start;
     while (currentEle != nullptr) {
         if (currentEle->pos == pos) {
@@ -103,7 +112,7 @@ template <typename T> T LinkedList<T>::get(int pos) {
 }
 
 template <typename T> void LinkedList<T>::set(int pos, T ele) {
-    std::shared_ptr<Node> currentEle(new Node);
+    Node* currentEle = new Node;
     currentEle = start;
     while (currentEle != nullptr) {
         if (currentEle->pos == pos) {
@@ -116,14 +125,14 @@ template <typename T> void LinkedList<T>::set(int pos, T ele) {
 
 template <typename T> T LinkedList<T>::pop() {
     if (end == nullptr) {
-        throw 404;
+        throw std::runtime_error("No elements to delete!");
     } else if (start == end) {
         T endVal = end->data;
         start = end = nullptr;
         size -= 1;
         return endVal;
     } else {
-        std::shared_ptr<Node> currentEle(new Node);
+        Node* currentEle = new Node;
         currentEle = start;
         int endPos = end->pos;
         while (currentEle != nullptr) {
@@ -141,7 +150,7 @@ template <typename T> T LinkedList<T>::pop() {
 }
 
 template <typename T> T LinkedList<T>::del(int pos) {
-    std::shared_ptr<Node> currentEle(new Node);
+    Node* currentEle = new Node;
     T delVal = get(pos);
     currentEle = start;
     while (currentEle != nullptr) {
